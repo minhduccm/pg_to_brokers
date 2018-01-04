@@ -43,6 +43,7 @@ class StreamProcessor(object):
                 break
 
             formatted_changes = parser.parse(changes, stream_reader.tables)
+            stream_writer.init_broker_stuffs()
             stream_writer.publish_changes_to_broker(formatted_changes)
             stream_reader.delete_changes_after_comsumed(pg_cursor)
             logger.info('Finished to process changes...')
