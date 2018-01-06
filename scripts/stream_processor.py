@@ -2,9 +2,18 @@ import time
 
 from logger import Logger
 from parser import Parser
+from stream_writer import StreamWriter
+from stream_reader import StreamReader
+from util import auto_attr_check
 
 
+@auto_attr_check
 class StreamProcessor(object):
+
+    # Regsiter type for attributes
+    stream_writer = StreamWriter
+    stream_reader = StreamReader
+
     def __init__(
         self,
         stream_reader,

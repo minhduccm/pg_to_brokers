@@ -6,9 +6,8 @@ class StreamWriter(object):
 
     __metaclass__ = ABCMeta
 
-    def __init__(self, broker_info):
+    def __init__(self):
         super(StreamWriter, self).__init__()
-        self.broker_info = broker_info
 
     @abstractmethod
     def init_broker_stuffs(self):

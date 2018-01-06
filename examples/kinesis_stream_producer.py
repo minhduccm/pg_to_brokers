@@ -23,8 +23,14 @@ def main():
     )
 
     # stream writer
-    broker_info = {}
-    stream_writer = KinesisWriter(broker_info=broker_info)
+    stream_writer = KinesisWriter(
+        region='aws_region',  # eg. 'us-west-2'
+        aws_access_key_id='aws_access_key_id',
+        aws_secret_access_key='aws_secret_access_key',
+        stream_name='stream_name',
+        number_of_records_to_send=5, # number of records to send to broker once
+        default_partition_key='Default'
+    )
 
     # stream processor
     log_info = {
@@ -33,6 +39,7 @@ def main():
     }
     stream_processor = StreamProcessor(
         stream_reader=stream_reader,
+        # stream_writer attr MUST be an instance of StreamWriter's subclass
         stream_writer=stream_writer,
         log_info=log_info
     )
