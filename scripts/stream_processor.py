@@ -54,7 +54,7 @@ class StreamProcessor(object):
             formatted_changes = parser.parse(changes, stream_reader.tables)
             if len(formatted_changes) == 0:
                 logger.info('There are few changes but not in \
-                    one of supported operations (insert/update/delete)...')
+                    supported operations (insert/update/delete)...')
                 time.sleep(self.delay_time)
                 stream_reader.delete_changes_after_comsumed(pg_cursor)
                 # continue
