@@ -1,9 +1,13 @@
+import base64
 import boto3
+import json
 
 from stream_writer import StreamWriter
 
 
 class KinesisWriter(StreamWriter):
+
+    client = None
 
     def __init__(
         self,
@@ -25,9 +29,10 @@ class KinesisWriter(StreamWriter):
     def init_broker_stuffs(self):
         client = boto3.client(
             'kinesis',
-            self.region,
-            aws_access_key_id=self.aws_access_key_id,
-            aws_secret_access_key=self.aws_secret_access_key
+            self.region
+            # TODO: uncomment belows after testing
+            # aws_access_key_id=self.aws_access_key_id,
+            # aws_secret_access_key=self.aws_secret_access_key
         )
         self.client = client
 
@@ -39,7 +44,9 @@ class KinesisWriter(StreamWriter):
         for change in changes:
             records.append(
                 {
-                    'Data': change,
+                    'Data': base64.b64encode(
+                        json.dumps(change).encode('utf-8')
+                    ),
                     'PartitionKey': self.assign_change_to_partition_key(change)
                 }
             )
@@ -48,7 +55,10 @@ class KinesisWriter(StreamWriter):
     def put_records_chunk(self, chunk):
         client = self.client
         records = self.standardise_kinesis_format(chunk)
-        client.put_records(records, self.stream_name)
+        client.put_records(
+            Records=records,
+            StreamName=self.stream_name
+        )
 
     def publish_changes_to_broker(self, formatted_changes):
         offset = self.number_of_records_to_send

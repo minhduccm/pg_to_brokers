@@ -2,8 +2,8 @@ import time
 
 from logger import Logger
 from parser import Parser
-from stream_writer import StreamWriter
 from stream_reader import StreamReader
+from stream_writer import StreamWriter
 from util import auto_attr_check
 
 
@@ -52,6 +52,14 @@ class StreamProcessor(object):
                 break
 
             formatted_changes = parser.parse(changes, stream_reader.tables)
+            if len(formatted_changes) == 0:
+                logger.info('There are few changes but not in \
+                    one of supported operations (insert/update/delete)...')
+                time.sleep(self.delay_time)
+                stream_reader.delete_changes_after_comsumed(pg_cursor)
+                # continue
+                break
+
             stream_writer.init_broker_stuffs()
             stream_writer.publish_changes_to_broker(formatted_changes)
             stream_reader.delete_changes_after_comsumed(pg_cursor)
