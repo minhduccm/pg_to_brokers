@@ -1,3 +1,5 @@
+import time
+
 from scripts.kinesis_writer import KinesisWriter
 from scripts.stream_processor import StreamProcessor
 from scripts.stream_reader import StreamReader
@@ -6,20 +8,17 @@ from scripts.stream_reader import StreamReader
 def main():
     # stream reader
     pg_info = {
-        'host': 'host_name',
+        'host': 'host',
         'port': 5432,
-        'database': 'db_name',
+        'database': 'database',
         'user': 'user',
         'password': 'password'
     }
-    slot_name = 'pg_slot'
-    upto_nchanges = 1
-    tables = []
     stream_reader = StreamReader(
         pg_info=pg_info,
-        slot_name=slot_name,
-        upto_nchanges=upto_nchanges,
-        tables=tables
+        slot_name='slot_name',
+        upto_nchanges=1,
+        tables=[]
     )
 
     # stream writer
@@ -41,10 +40,17 @@ def main():
         stream_reader=stream_reader,
         # stream_writer attr MUST be an instance of StreamWriter's subclass
         stream_writer=stream_writer,
-        log_info=log_info
+        log_info=log_info,
+        detroy_slot_after_stopping=False,
+        delay_time=0.5
     )
 
     stream_processor.start()
+    time.sleep(7)
+    # instead of sleep 7s,
+    # you can do some logics of conditions
+    # to terminate streaming process gracefully
+    stream_processor.stop()
 
 
 if __name__ == '__main__':

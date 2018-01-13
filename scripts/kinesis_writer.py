@@ -8,6 +8,7 @@ from stream_writer import StreamWriter
 class KinesisWriter(StreamWriter):
 
     client = None
+    stream_desciptor = None
 
     def __init__(
         self,
@@ -34,6 +35,10 @@ class KinesisWriter(StreamWriter):
             # aws_access_key_id=self.aws_access_key_id,
             # aws_secret_access_key=self.aws_secret_access_key
         )
+        stream_desciptor = client.describe_stream(
+            StreamName=self.stream_name
+        )
+        self.stream_desciptor = stream_desciptor
         self.client = client
 
     def assign_change_to_partition_key(self, change):

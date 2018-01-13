@@ -1,5 +1,6 @@
 import psycopg2
 import psycopg2.errorcodes
+
 from postgresql_connector import PostgresqlConnector
 
 
@@ -45,7 +46,7 @@ class StreamReader(object):
                 .format(slot_name=slot_name)
             )
             slot_info = pg_cursor.fetchall()
-            logger.info('Slot Info: ' + str(slot_info))
+            logger.info('Created slot with info: ' + str(slot_info))
 
         except psycopg2.ProgrammingError as p:
             pg_connector.commit()

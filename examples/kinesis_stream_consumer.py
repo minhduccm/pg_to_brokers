@@ -36,7 +36,6 @@ class Executor(threading.Thread):
             )
             self.process_records(record_response)
             time.sleep(2)
-            # break
 
 
 def main():
