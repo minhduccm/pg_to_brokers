@@ -43,7 +43,6 @@ class Processor(threading.Thread):
             stream_writer.init_broker_stuffs(logger)
 
             while (True):
-                logger.info('is stopped: ' + str(stream_processor.is_stopped))
                 if stream_processor.is_stopped is True:
                     self.clean_up(stream_processor)
                     logger.info('Streaming process terminated...')
@@ -132,4 +131,5 @@ class StreamProcessor(object):
 
     def stop(self):
         print('Stopping process...')
-        self.is_stopped = True  # TODO: check race condition
+        # This is atomic operation (thread safe)
+        self.is_stopped = True
