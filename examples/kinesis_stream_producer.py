@@ -33,7 +33,7 @@ def main():
 
     # stream processor
     log_info = {
-        'log_path': '.',
+        'log_path': 'log_path',
         'log_file_name': 'my_log_file.log'
     }
     stream_processor = StreamProcessor(

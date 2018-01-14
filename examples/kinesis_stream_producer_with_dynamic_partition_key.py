@@ -15,8 +15,8 @@ class KinesisWriterWithDynamicPartitionKey(KinesisWriter):
         return obj
 
     def assign_change_to_partition_key(self, change):
-        stream_desciptor = self.stream_desciptor
-        shard_len = len(stream_desciptor['StreamDescription']['Shards'])
+        stream_descriptor = self.stream_descriptor
+        shard_len = len(stream_descriptor['StreamDescription']['Shards'])
         change_obj = self.__build_change_obj(change)
         partition_key = change_obj['id'] % shard_len
         # NOTE: ex - if type of field is not a number

@@ -1,14 +1,16 @@
 import base64
-import boto3
 import json
+import sys
 
+from boto import kinesis
+from boto.kinesis.exceptions import ResourceNotFoundException
 from stream_writer import StreamWriter
 
 
 class KinesisWriter(StreamWriter):
 
     client = None
-    stream_desciptor = None
+    stream_descriptor = None
 
     def __init__(
         self,
@@ -27,19 +29,40 @@ class KinesisWriter(StreamWriter):
         self.stream_name = stream_name
         self.default_partition_key = default_partition_key
 
-    def init_broker_stuffs(self):
-        client = boto3.client(
-            'kinesis',
-            self.region
-            # TODO: uncomment belows after testing
-            # aws_access_key_id=self.aws_access_key_id,
-            # aws_secret_access_key=self.aws_secret_access_key
-        )
-        stream_desciptor = client.describe_stream(
-            StreamName=self.stream_name
-        )
-        self.stream_desciptor = stream_desciptor
-        self.client = client
+    def init_broker_stuffs(self, logger):
+        def log_error_and_raise(err_msg, logger):
+            print(err_msg)
+            logger.error(err_msg)
+            raise Exception(
+                """Got error inside "init_broker_stuffs" function. Raised exception to caller.""")
+
+        try:
+            client = kinesis.connect_to_region(
+                self.region
+                # aws_access_key_id=aws_access_key_id,
+                # aws_secret_access_key=aws_secret_access_key
+            )
+            stream_descriptor = client.describe_stream(
+                stream_name=self.stream_name
+            )
+            self.stream_descriptor = stream_descriptor
+            self.client = client
+
+        except ResourceNotFoundException:
+            if self.stream_descriptor is None:
+                err_msg = 'Could not find {stream_name} stream.' \
+                    .format(stream_name=self.stream_name)
+                log_error_and_raise(err_msg, logger)
+                return
+            status = self.stream_descriptor['StreamDescription']['StreamStatus']
+            if 'ACTIVE' not in status:
+                err_msg = 'Stream status: {status}. Should be ACTIVE.' \
+                    .format(status=status)
+                log_error_and_raise(err_msg, logger)
+        else:
+            err_msg = 'Unexpected error: {error}'\
+                .format(error=str(sys.exc_info()[0]))
+            log_error_and_raise(err_msg, logger)
 
     def assign_change_to_partition_key(self, change):
         return self.default_partition_key
@@ -61,11 +84,11 @@ class KinesisWriter(StreamWriter):
         client = self.client
         records = self.standardise_kinesis_format(chunk)
         client.put_records(
-            Records=records,
-            StreamName=self.stream_name
+            records=records,
+            stream_name=self.stream_name
         )
 
-    def publish_changes_to_broker(self, formatted_changes):
+    def publish_changes_to_broker(self, formatted_changes, logger):
         offset = self.number_of_records_to_send
         len_changes = len(formatted_changes)
         skip = 0

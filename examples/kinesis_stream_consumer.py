@@ -49,8 +49,8 @@ def main():
     )
 
     stream_name = 'stream_name'
-    stream_desciptor = client.describe_stream(stream_name=stream_name)
-    shards = stream_desciptor['StreamDescription']['Shards']
+    stream_descriptor = client.describe_stream(stream_name=stream_name)
+    shards = stream_descriptor['StreamDescription']['Shards']
     for shard in shards:
         executor = Executor(client, stream_name, shard['ShardId'])
         executor.start()
