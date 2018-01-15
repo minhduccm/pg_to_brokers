@@ -38,10 +38,12 @@ class KinesisWriter(StreamWriter):
 
         try:
             client = kinesis.connect_to_region(
-                self.region
-                # aws_access_key_id=aws_access_key_id,
-                # aws_secret_access_key=aws_secret_access_key
-            )
+                self.region,
+                aws_access_key_id=self.aws_access_key_id,
+                aws_secret_access_key=self.aws_secret_access_key
+            ) if self.aws_access_key_id is not None \
+                and self.aws_secret_access_key is not None else kinesis.connect_to_region(self.region)
+
             stream_descriptor = client.describe_stream(
                 stream_name=self.stream_name
             )

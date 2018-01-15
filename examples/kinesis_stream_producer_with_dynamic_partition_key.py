@@ -66,7 +66,7 @@ def main():
     )
 
     stream_processor.start()
-    time.sleep(20)
+    time.sleep(7)
     # instead of sleep 7s,
     # you can do some logics of conditions
     # to terminate streaming process gracefully
