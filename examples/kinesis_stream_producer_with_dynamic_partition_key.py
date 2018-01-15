@@ -1,8 +1,8 @@
 import time
 
-from scripts.kinesis_writer import KinesisWriter
-from scripts.stream_processor import StreamProcessor
-from scripts.stream_reader import StreamReader
+from pg_to_brokers.kinesis_writer import KinesisWriter
+from pg_to_brokers.stream_processor import StreamProcessor
+from pg_to_brokers.stream_reader import StreamReader
 
 
 class KinesisWriterWithDynamicPartitionKey(KinesisWriter):
@@ -44,8 +44,8 @@ def main():
     # stream writer
     stream_writer = KinesisWriterWithDynamicPartitionKey(
         region='us-west-2',  # eg. 'us-west-2'
-        aws_access_key_id='aws_access_key_id',
-        aws_secret_access_key='aws_secret_access_key',
+        # aws_access_key_id='aws_access_key_id',
+        # aws_secret_access_key='aws_secret_access_key',
         stream_name='stream_name',
         number_of_records_to_send=5,  # number of records to send to broker once
         default_partition_key='Default'

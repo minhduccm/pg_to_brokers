@@ -15,8 +15,8 @@ class KinesisWriter(StreamWriter):
     def __init__(
         self,
         region,
-        aws_access_key_id,
-        aws_secret_access_key,
+        aws_access_key_id='',
+        aws_secret_access_key='',
         stream_name,
         number_of_records_to_send=5,
         default_partition_key='Default'
@@ -41,8 +41,8 @@ class KinesisWriter(StreamWriter):
                 self.region,
                 aws_access_key_id=self.aws_access_key_id,
                 aws_secret_access_key=self.aws_secret_access_key
-            ) if self.aws_access_key_id is not None \
-                and self.aws_secret_access_key is not None else kinesis.connect_to_region(self.region)
+            ) if self.aws_access_key_id == '' \
+                and self.aws_secret_access_key == '' else kinesis.connect_to_region(self.region)
 
             stream_descriptor = client.describe_stream(
                 stream_name=self.stream_name
