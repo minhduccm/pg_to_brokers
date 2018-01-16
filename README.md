@@ -17,10 +17,21 @@ It's Python lib that utilises logical decoding feature of PostgreSQL (>= 9.4) to
 **reliability** - ensure no data will be lost on any sort of system failure (process crashed, network outages, ...)
 
 ## Installation
+1. Update PostgreSQL configuration to enable Logical Decoding feature:
+* ```wal_level``` to ```logical```
+* ```max_replication_slots``` to at least 1
+2. Set up AWS Kinesis stream
+3. Install: ```pip install pg_to_brokers```
 
-## Usage
+## Usage (Examples)
+1. Producer: 
+* [kinesis_stream_producer](https://github.com/minhduccm/pg_to_brokers/blob/master/examples/kinesis_stream_producer.py)
+* [kinesis_stream_producer_with_dynamic_partition_key](https://github.com/minhduccm/pg_to_brokers/blob/master/examples/kinesis_stream_producer_with_dynamic_partition_key.py)
+2. Consumer:
+* [kinesis_stream_consumer](https://github.com/minhduccm/pg_to_brokers/blob/master/examples/kinesis_stream_consumer.py)
+3. Record format:
 
-## Notes:
+## Notes
 - With fault tolerant design in mind, we guarantee no data lost but in case of system failure that could lead to sending messages/events more than once so your Consumer workers should be able to handle duplication as well.
 
-## Future works:
+## Future works
