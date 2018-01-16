@@ -18,6 +18,8 @@ It's Python lib that utilises [logical decoding](https://www.postgresql.org/docs
 
 **reliability** - ensure no data will be lost on any sort of system failure (process crashed, network outages, ...)
 
+![alt text](https://github.com/minhduccm/pg_to_brokers/blob/master/images/architecture.png "Architecture")
+
 ## Installation
 1. Update PostgreSQL configuration to enable Logical Decoding feature:
 * ```wal_level``` to ```logical```
