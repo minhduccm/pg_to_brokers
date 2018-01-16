@@ -35,7 +35,6 @@ It's Python lib that utilises [logical decoding](https://www.postgresql.org/docs
 * [kinesis_stream_producer](https://github.com/minhduccm/pg_to_brokers/blob/master/examples/kinesis_stream_producer.py)
 * [kinesis_stream_producer_with_dynamic_partition_key](https://github.com/minhduccm/pg_to_brokers/blob/master/examples/kinesis_stream_producer_with_dynamic_partition_key.py). In this example, we're overriding `assign_change_to_partition_key` method to assign dynamically change to dynamic partition keys based on `id` field.
 * To implement your own stream writer (`KafkaWriter`, for example), just extend `StreamWriter` abstract class and implement 2 methods: `init_broker_stuffs` & `publish_changes_to_broker`. It would similar to [kinesis_writer.py](https://github.com/minhduccm/pg_to_brokers/blob/master/pg_to_brokers/kinesis_writer.py)
-* 
 2. Consumer:
 * [kinesis_stream_consumer](https://github.com/minhduccm/pg_to_brokers/blob/master/examples/kinesis_stream_consumer.py). In this example, we're using `boto` library to build simple consumer. But in real world application, we highly recommend using [Kinesis Client Library (KCL)](https://docs.aws.amazon.com/streams/latest/dev/developing-consumers-with-kcl.html) because KCL provides non-trivial value over `boto`. Please see accepted answer [here](https://stackoverflow.com/questions/22100206/consuming-a-kinesis-stream-in-python) for more detail.
 3. Record format:
