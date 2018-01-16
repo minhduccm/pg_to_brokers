@@ -1,6 +1,6 @@
 # pg_to_brokers
 ## Inspiration
-In modern and sophisticated architecture/application, the requirement like copying database contents to some other system in near realtime and transaction commit time order guarantee is becoming more popular. For example, to make it searchable in ElasticSearch or to load it into a data warehouse for analytics. With those kinds of task, there is no room for taking snapshot of database approach.
+In modern and sophisticated architecture/application, the requirement likes copying database contents to some other system in near realtime and transaction commit time order guarantee is becoming more popular. For example, to make it searchable in ElasticSearch or to load it into a data warehouse for analytics. With those kinds of task, there is no room for taking snapshot of database approach.
 
 One option to achieve this is to do something like "dual writes". That is, every time your application code writes to the database, it also does additional action against an external system (sending changes to data warehouse and trigger re-compute scores for recommendation system with those change, for example)
 
@@ -33,9 +33,11 @@ It's Python lib that utilises [logical decoding](https://www.postgresql.org/docs
 ## Usage (Examples)
 1. Producer: 
 * [kinesis_stream_producer](https://github.com/minhduccm/pg_to_brokers/blob/master/examples/kinesis_stream_producer.py)
-* [kinesis_stream_producer_with_dynamic_partition_key](https://github.com/minhduccm/pg_to_brokers/blob/master/examples/kinesis_stream_producer_with_dynamic_partition_key.py)
+* [kinesis_stream_producer_with_dynamic_partition_key](https://github.com/minhduccm/pg_to_brokers/blob/master/examples/kinesis_stream_producer_with_dynamic_partition_key.py). In this example, we're overriding `assign_change_to_partition_key` method to assign dynamically change to dynamic partition keys based on `id` field.
+* To implement your own stream writer (`KafkaWriter`, for example), just extend `StreamWriter` abstract class and implement 2 methods: `init_broker_stuffs` & `publish_changes_to_broker`. It would similar to [kinesis_writer.py](https://github.com/minhduccm/pg_to_brokers/blob/master/pg_to_brokers/kinesis_writer.py)
+* 
 2. Consumer:
-* [kinesis_stream_consumer](https://github.com/minhduccm/pg_to_brokers/blob/master/examples/kinesis_stream_consumer.py)
+* [kinesis_stream_consumer](https://github.com/minhduccm/pg_to_brokers/blob/master/examples/kinesis_stream_consumer.py). In this example, we're using `boto` library to build simple consumer. But in real world application, we highly recommend using [Kinesis Client Library (KCL)](https://docs.aws.amazon.com/streams/latest/dev/developing-consumers-with-kcl.html) because KCL provides non-trivial value over `boto`. Please see accepted answer [here](https://stackoverflow.com/questions/22100206/consuming-a-kinesis-stream-in-python) for more detail.
 3. Record format:
 ```
 {
