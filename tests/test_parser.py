@@ -1,4 +1,4 @@
-from scripts.parser import Parser
+from pg_to_brokers.parser import Parser
 
 
 def test_parse():
