@@ -10,7 +10,7 @@ class KinesisWriterWithDynamicPartitionKey(KinesisWriter):
 
     def __build_change_obj(self, change):
         obj = {}
-        for idx, field in change['fields']:
+        for idx, field in enumerate(change['fields']):
             obj[field] = change['values'][idx]
         return obj
 
@@ -22,7 +22,7 @@ class KinesisWriterWithDynamicPartitionKey(KinesisWriter):
         # NOTE: ex - if type of field is not a number
         # then we can user a hash function to map that field to number
         # prior to doing modulo
-        return partition_key
+        return str(partition_key)
 
 
 def main():
