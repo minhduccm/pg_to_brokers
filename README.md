@@ -6,6 +6,8 @@ One option to achive this is to do something like "dual writes". That is, every 
 
 This approach looks simple but it could lead to data inconsistency problem - Data between 2 different datastores will become more and more inconsistent overtime because of bugs, server downs, ...
 
+![alt text](https://cdn2.hubspot.net/hub/540072/file-3062873213-png/blog-files/slide-37-4-3.png "Stop do this")
+
 ## Introduction
 **pg_to_brokers** is a lightweight library to stream continuously changes from PostgreSQL database to popular streaming brokers such as AWS Kinesis, Apache Kafka, etc... (currently just supported Kinesis)
 It's Python lib that utilises [logical decoding](https://www.postgresql.org/docs/9.4/static/logicaldecoding.html) feature of PostgreSQL (>= 9.4) to capture changes from Write Ahead Log (WAL) then publish them to broker - a.k.a Kinesis for now with:
@@ -42,6 +44,7 @@ It's Python lib that utilises [logical decoding](https://www.postgresql.org/docs
 ```
 
 ## Notes
-- With fault tolerant design in mind, we guarantee no data lost. But in case of system failure that could lead to sending messages/events more than once so your Consumer workers should be able to handle duplication as well.
+With fault tolerant design in mind, we guarantee no data lost. But in case of system failure that could lead to sending messages/events more than once so your Consumer workers should be able to handle duplication as well.
 
 ## Future works
+- Support Apache Kafka
