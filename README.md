@@ -8,7 +8,7 @@ This approach looks simple but it could lead to data inconsistency problem - Dat
 
 ## Introduction
 **pg_to_brokers** is a lightweight library to stream continuously changes from PostgreSQL database to popular streaming brokers such as AWS Kinesis, Apache Kafka, etc... (currently just supported Kinesis)
-It's Python lib that utilises logical decoding feature of PostgreSQL (>= 9.4) to capture changes from Write Ahead Log (WAL) then publish them to broker - a.k.a Kinesis for now with:
+It's Python lib that utilises [logical decoding](https://www.postgresql.org/docs/9.4/static/logicaldecoding.html) feature of PostgreSQL (>= 9.4) to capture changes from Write Ahead Log (WAL) then publish them to broker - a.k.a Kinesis for now with:
 
 **extendability** - you'll have fully control in hand with your custom code
 
@@ -30,8 +30,18 @@ It's Python lib that utilises logical decoding feature of PostgreSQL (>= 9.4) to
 2. Consumer:
 * [kinesis_stream_consumer](https://github.com/minhduccm/pg_to_brokers/blob/master/examples/kinesis_stream_consumer.py)
 3. Record format:
+```
+{
+    fields: <array of field of the change>,
+    values: <array of value of the change. Sorted respectively by fields' order>,
+    types: <array of type of change values. Sorted respectively by values' order>,
+    table_name: <string - table name>,
+    operation: <string - would be INSERT/UPDATE/DELETE>,
+    transaction_id: <string>
+}
+```
 
 ## Notes
-- With fault tolerant design in mind, we guarantee no data lost but in case of system failure that could lead to sending messages/events more than once so your Consumer workers should be able to handle duplication as well.
+- With fault tolerant design in mind, we guarantee no data lost. But in case of system failure that could lead to sending messages/events more than once so your Consumer workers should be able to handle duplication as well.
 
 ## Future works
