@@ -8,6 +8,8 @@ This approach looks simple but it could lead to data inconsistency problem - Dat
 
 ![alt text](https://cdn2.hubspot.net/hub/540072/file-3062873213-png/blog-files/slide-37-4-3.png "Stop do this")
 
+(Image source: https://www.confluent.io/blog/bottled-water-real-time-integration-of-postgresql-and-kafka/)
+
 ## Introduction
 **pg_to_brokers** is a lightweight library to stream continuously changes from PostgreSQL database to popular streaming brokers such as AWS Kinesis, Apache Kafka, etc... (currently just supported Kinesis)
 It's Python lib that utilises [logical decoding](https://www.postgresql.org/docs/9.4/static/logicaldecoding.html) feature of PostgreSQL (>= 9.4) to capture changes from Write Ahead Log (WAL) then publish them to broker - a.k.a Kinesis for now with:
