@@ -1,6 +1,5 @@
 import base64
 import json
-import sys
 
 from boto import kinesis
 from boto.kinesis.exceptions import ResourceNotFoundException
@@ -15,9 +14,9 @@ class KinesisWriter(StreamWriter):
     def __init__(
         self,
         region,
+        stream_name,
         aws_access_key_id='',
         aws_secret_access_key='',
-        stream_name,
         number_of_records_to_send=5,
         default_partition_key='Default'
     ):
@@ -34,15 +33,15 @@ class KinesisWriter(StreamWriter):
             print(err_msg)
             logger.error(err_msg)
             raise Exception(
-                """Got error inside "init_broker_stuffs" function. Raised exception to caller.""")
+                'Got error inside "init_broker_stuffs" function.')
 
         try:
             client = kinesis.connect_to_region(
                 self.region,
                 aws_access_key_id=self.aws_access_key_id,
                 aws_secret_access_key=self.aws_secret_access_key
-            ) if self.aws_access_key_id == '' \
-                and self.aws_secret_access_key == '' else kinesis.connect_to_region(self.region)
+            ) if self.aws_access_key_id != '' \
+                and self.aws_secret_access_key != '' else kinesis.connect_to_region(self.region)
 
             stream_descriptor = client.describe_stream(
                 stream_name=self.stream_name
@@ -61,10 +60,9 @@ class KinesisWriter(StreamWriter):
                 err_msg = 'Stream status: {status}. Should be ACTIVE.' \
                     .format(status=status)
                 log_error_and_raise(err_msg, logger)
-        else:
-            err_msg = 'Unexpected error: {error}'\
-                .format(error=str(sys.exc_info()[0]))
-            log_error_and_raise(err_msg, logger)
+
+        except Exception as e:
+            raise e
 
     def assign_change_to_partition_key(self, change):
         return self.default_partition_key

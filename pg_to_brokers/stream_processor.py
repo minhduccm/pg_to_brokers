@@ -21,7 +21,7 @@ class Processor(threading.Thread):
         self.stream_processor = stream_processor
 
     def clean_up(self, stream_processor):
-        if stream_processor.detroy_slot_after_stopping is True:
+        if stream_processor.destroy_slot_after_stopping is True:
             stream_processor.stream_reader \
                 .destroy_logical_replication_slot_if_existed(
                     stream_processor.pg_cursor,
@@ -95,7 +95,7 @@ class StreamProcessor(object):
         delay_time=0.1,
         log_info=None,
         is_stopped=False,
-        detroy_slot_after_stopping=False
+        destroy_slot_after_stopping=False
     ):
         super(StreamProcessor, self).__init__()
         self.stream_reader = stream_reader
@@ -103,7 +103,7 @@ class StreamProcessor(object):
         self.delay_time = delay_time
         self.log_info = log_info
         self.is_stopped = is_stopped
-        self.detroy_slot_after_stopping = detroy_slot_after_stopping
+        self.destroy_slot_after_stopping = destroy_slot_after_stopping
         pg_connector, pg_cursor = stream_reader.init_pg_stuffs()
         self.pg_connector = pg_connector
         self.pg_cursor = pg_cursor
