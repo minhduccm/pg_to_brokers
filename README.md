@@ -6,7 +6,7 @@ One option to achieve this is to do something like "dual writes". That is, every
 
 This approach looks simple, but it could lead to data inconsistency problem - Data between 2 different data stores will become more and more inconsistent over time because of bugs, server downs, ...
 
-![alt text](https://cdn2.hubspot.net/hub/540072/file-3062873213-png/blog-files/slide-37-4-3.png "Stop do this")
+![alt text](https://www.confluent.io/wp-content/uploads/2016/08/slide-37-4-3.png "Stop doing this")
 
 (Image source: https://www.confluent.io/blog/bottled-water-real-time-integration-of-postgresql-and-kafka/)
 
